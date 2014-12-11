@@ -10,7 +10,7 @@ import xlrd
 import re
 reload(sys)
 sys.setdefaultencoding( "utf-8" )
-def calculate(path1,keyindex1,valindex1,srow1,path2,keyindex2,valindex2,srow2):
+def calculate(path1,keyindex1,valindex1,path2,keyindex2,valindex2):
     s1map={}
     s2map={}
     data1 = xlrd.open_workbook(path1)
@@ -36,18 +36,19 @@ def calculate(path1,keyindex1,valindex1,srow1,path2,keyindex2,valindex2,srow2):
     vals2 = table2.col_values(int(valindex2)-1)
     i = 0
     for k in keys2:
-        if k and k != '':
+        if k and k != '' and '汇总' in k:
           kk = k.replace('汇总','').strip()
           if s2map.get(kk,0.0) > 0.0:
               s2map[kk]  =  s2map[kk] + vals2[i]
           else:
               s2map[kk]  =  vals2[i]
-          print kk
-          print s1map.get(kk,0.0)
         i = i + 1
 
+    for k,v in s1map.items():
+       print k,v,s2map.get(k)
+
 if __name__ == '__main__':
-      if len(sys.argv)!=9:
-           print "参数格式为：python aggregate.py excel文件1路径 key的列号 值的列号 起始行号 excel文件2路径 key的列号 值的列号 起始行号"
+      if len(sys.argv)!=7:
+           print "参数格式为：python aggregate.py excel文件1路径 key的列号 值的列号 excel文件2路径 key的列号 值的列号"
       else:
-           calculate(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6],sys.argv[7],sys.argv[8])
+           calculate(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6])
