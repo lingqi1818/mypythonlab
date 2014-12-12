@@ -7,6 +7,7 @@
 
 import sys
 import xlrd
+import xlwt
 import re
 reload(sys)
 sys.setdefaultencoding( "utf-8" )
@@ -46,6 +47,18 @@ def calculate(path1,keyindex1,valindex1,path2,keyindex2,valindex2):
 
     for k,v in s1map.items():
        print k,v,s2map.get(k)
+
+
+    wbk = xlwt.Workbook(encoding='utf-8', style_compression=0)  
+    sheet = wbk.add_sheet('sheet 1', cell_overwrite_ok=True)  ##第二参数用于确认同一个cell单元是否可以重设值。  
+    i = 0
+    for k,v in s1map.items():
+       #print k,v,s2map.get(k)
+       sheet.write(i, 0, k)
+       sheet.write(i, 1, v)
+       sheet.write(i, 2, s2map.get(k))
+       i = i + 1
+    wbk.save('out.xls')    ##该文件名必须存在  
 
 if __name__ == '__main__':
       if len(sys.argv)!=7:
